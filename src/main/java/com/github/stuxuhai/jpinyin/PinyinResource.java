@@ -1,11 +1,15 @@
 package com.github.stuxuhai.jpinyin;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 资源文件加载类
@@ -14,13 +18,30 @@ import java.util.Map;
  */
 public final class PinyinResource {
 
-    private PinyinResource() {}
+    private PinyinResource() {
+    }
 
-    private static Map<String, String> getResource(String resourceName) {
-        Map<String, String> map = new HashMap<String, String>();
+    protected static Reader newClassPathReader(String classpath) {
+        InputStream is = PinyinResource.class.getResourceAsStream(classpath);
         try {
-            InputStream is = PinyinResource.class.getResourceAsStream(resourceName);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            return new InputStreamReader(is, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    protected static Reader newFileReader(String path) throws FileNotFoundException {
+        try {
+            return new InputStreamReader(new FileInputStream(path), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    protected static Map<String, String> getResource(Reader reader) {
+        Map<String, String> map = new ConcurrentHashMap<String, String>();
+        try {
+            BufferedReader br = new BufferedReader(reader);
             String line = null;
             while ((line = br.readLine()) != null) {
                 String[] tokens = line.trim().split("=");
@@ -28,21 +49,21 @@ public final class PinyinResource {
             }
             br.close();
         } catch (IOException e) {
-            throw new PinyinException(e);
+            throw new RuntimeException(e);
         }
 
         return map;
     }
 
     protected static Map<String, String> getPinyinResource() {
-        return getResource("/data/pinyin.db");
+        return getResource(newClassPathReader("/data/pinyin.dict"));
     }
 
     protected static Map<String, String> getMutilPinyinResource() {
-        return getResource("/data/mutil_pinyin.db");
+        return getResource(newClassPathReader("/data/mutil_pinyin.dict"));
     }
 
     protected static Map<String, String> getChineseResource() {
-        return getResource("/data/chinese.db");
+        return getResource(newClassPathReader("/data/chinese.dict"));
     }
 }

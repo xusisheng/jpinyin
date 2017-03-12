@@ -20,7 +20,9 @@ JPinyin支持多种拼音输出格式：带音标、不带音标、数字表示�
 
 JPinyin支持常见多音字的识别，其中包括词组、成语、地名等；<br>
 
-5、简繁体中文转换<br>
+5、简繁体中文转换；<br>
+
+6、支持添加用户自定义字典；<br>
 
 ## Maven
 
@@ -28,10 +30,34 @@ JPinyin支持常见多音字的识别，其中包括词组、成语、地名等�
     <dependency>
        <groupId>com.github.stuxuhai</groupId>
        <artifactId>jpinyin</artifactId>
-       <version>1.1.5</version>
+       <version>1.1.8</version>
     </dependency>
 ```
 
+## Gradle
+
+Step 1. Add the JitPack repository to your build file
+Add it in your root build.gradle at the end of repositories:
+
+``` xml
+allprojects {
+	repositories {
+        ...
+    	maven { url "https://jitpack.io" }
+	}
+}
+
+```
+
+Step 2. Add the dependency
+
+``` xml
+
+dependencies {
+    compile 'com.github.SilenceDut:jpinyin:v1.0'
+}
+    
+``` 
 ## Usage
 
 ``` java
@@ -40,6 +66,8 @@ JPinyin支持常见多音字的识别，其中包括词组、成语、地名等�
     PinyinHelper.convertToPinyinString(str, ",", PinyinFormat.WITH_TONE_NUMBER); // ni3,hao3,shi4,jie4
     PinyinHelper.convertToPinyinString(str, ",", PinyinFormat.WITHOUT_TONE); // ni,hao,shi,jie
     PinyinHelper.getShortPinyin(str); // nhsj
+    PinyinHelper.addPinyinDict("user.dict");  // 添加用户自定义字典
+    
 ```
 
 ## Thanks
@@ -55,3 +83,13 @@ JPinyin支持常见多音字的识别，其中包括词组、成语、地名等�
 [@latifrons](https://github.com/latifrons)
 
 [@baimoon](https://github.com/baimoon)
+
+[@chorar](https://github.com/chorar)
+
+[@ShaomingLi](https://github.com/ShaomingLi)
+
+[@itachi04199](https://github.com/itachi04199)
+
+[@SilenceDut](https://github.com/SilenceDut)
+
+[@voidhug](https://github.com/voidhug)
